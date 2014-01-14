@@ -1,10 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'simple_google_drive/version'
 
 Gem::Specification.new do |spec|
   spec.name        = "simple_google_drive"
-  spec.version     = SimpleGoogleDrive::GEM_VERSION
+  spec.version     = SimpleGoogleDrive::VERSION
   spec.authors     = ["Guilherme Vinicius Moreira"]
   spec.email       = ["gui.vinicius@gmail.com"]
   spec.summary     = "A simple interface for Google Drive API"

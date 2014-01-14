@@ -5,8 +5,8 @@ describe SimpleGoogleDrive do
   let(:oauth2_access_token) { "1/fFBGRNJru1FQd44AzqT3Zg" }
   let(:headers) { {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Authorization'=>"Bearer #{oauth2_access_token}", 'Host'=>'www.googleapis.com', 'User-Agent'=>'Ruby/SimpleGoogleDrive/0.0.1'} }
 
-  it "returns a new instance" do
-    expect(SimpleGoogleDrive.new(oauth2_access_token)).to be_instance_of(SimpleGoogleDrive)
+  it "returns a new client instance" do
+    expect(SimpleGoogleDrive.new(oauth2_access_token)).to be_instance_of(SimpleGoogleDrive::Client)
   end
 
   describe  "API METHODS" do
