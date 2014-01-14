@@ -1,4 +1,7 @@
+
 # SimpleGoogleDrive
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/guivinicius/simple_google_drive/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 TODO: Write a gem description
 
