@@ -1,6 +1,7 @@
 
 # SimpleGoogleDrive
 
+[![Build Status](https://travis-ci.org/guivinicius/simple_google_drive.png?branch=master)](https://travis-ci.org/guivinicius/simple_google_drive)
 [![Code Climate](https://codeclimate.com/repos/52d5408f6956800ac6002687/badges/d52569719f4be221b7e5/gpa.png)](https://codeclimate.com/repos/52d5408f6956800ac6002687/feed)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/guivinicius/simple_google_drive/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
