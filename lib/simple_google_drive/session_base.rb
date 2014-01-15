@@ -5,25 +5,25 @@ module SimpleGoogleDrive
     private
 
     def build_url(path, params = nil, upload = false)
-      uri = URI.parse("#{ upload ? API_UPLOAD_URL : API_BASE_URL }#{path}")
-      uri.query = URI.encode_www_form(params) if !params.nil?
+      url = URI.parse("#{ upload ? API_UPLOAD_URL : API_BASE_URL }#{path}")
+      url.query = URI.encode_www_form(params) if !params.nil?
 
-      return uri
+      return url
     end
 
-    def request(uri, method = 'get', body = nil)
+    def build_request(url, method = 'get', body = nil, content_type = nil)
 
       default_headers = {'User-Agent' => "Ruby/SimpleGoogleDrive/#{SimpleGoogleDrive::VERSION}", 'Authorization' => "Bearer #{@access_token}"}
 
       case method
         when 'get'
-          req = Net::HTTP::Get.new(uri, default_headers)
+          req = Net::HTTP::Get.new(url, default_headers)
         when 'patch'
-          req = Net::HTTP::Patch.new(uri, default_headers)
+          req = Net::HTTP::Patch.new(url, default_headers)
         when 'post'
-          req = Net::HTTP::Post.new(uri, default_headers)
+          req = Net::HTTP::Post.new(url, default_headers)
         when 'delete'
-          req = Net::HTTP::Delete.new(uri, default_headers)
+          req = Net::HTTP::Delete.new(url, default_headers)
       end
 
       if !body.nil?
@@ -38,21 +38,26 @@ module SimpleGoogleDrive
                 raise ArgumentError, "Don't know how to handle 'body' (responds to 'read' but not to 'length' or 'stat.size')."
             end
             req.body_stream = body
-
-            # Need to figure out the MIME type
-            req.content_type = 'text/plain'
+            req["Content-Type"]= content_type
         else
             s = body.to_s
             req["Content-Length"] = s.length
+            req["Content-Type"] = content_type
             req.body = s
         end
+
       end
 
-      http = Net::HTTP.new(uri.host, uri.port)
+      return req
+    end
+
+    def send_request(url, request)
+
+      http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = true
 
       begin
-        response = http.request(req)
+        response = http.request(request)
       rescue Exception => e
         raise "Something wrong with the http response: #{e}"
       end
@@ -60,6 +65,7 @@ module SimpleGoogleDrive
     end
 
     def parse_response(response)
+      return "" if response.body.nil?
 
       if response.kind_of?(Net::HTTPServerError)
           raise "Google Drive Server Error: #{response} - #{response.body}"
@@ -73,13 +79,33 @@ module SimpleGoogleDrive
           end
       end
 
-      return "" if response.body.nil?
-
       begin
           JSON.parse(response.body)
       rescue JSON::ParserError
           raise "Unable to parse JSON response: #{response.body}"
       end
+
+    end
+
+    def build_multipart_body(file_object, body_object)
+      content_type = MIME::Types.type_for(file_object.path).first.to_s
+
+      body = <<-eos
+          --simple_google_drive_boundary
+          Content-Type: application/json; charset=UTF-8
+
+          #{body_object.to_json}
+
+          --simple_google_drive_boundary
+          Content-Type: #{content_type}
+
+          #{file_object.read}
+
+          --simple_google_drive_boundary--
+        eos
+    end
+
+    def build_resumable_body(file_object, body_object)
 
     end
 

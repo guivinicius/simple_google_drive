@@ -77,10 +77,10 @@ describe SimpleGoogleDrive::Client do
       it "returns it's metadata using 'simple' method" do
 
         response_body = '{"kind": "drive#files", "title": "example.txt"}'
-        params = { :uploadType => "media", :convert => "true" }
+        params = { :uploadType => "media", :parameters => { :convert => true} }
 
          stub_request(:post, "#{SimpleGoogleDrive::API_UPLOAD_URL}/files")
-         .with(:query => params, :body => /.+/, :headers => headers.merge({'Content-Type' => 'text/plain'}))
+         .with(:query => {:convert => 'true'}, :body => /.+/, :headers => headers.merge({'Content-Type' => 'text/plain'}))
          .to_return(:status => 200, :body => response_body)
 
         expect(client.files_upload(file_obj, params)).to eq(JSON.parse(response_body))
@@ -88,15 +88,13 @@ describe SimpleGoogleDrive::Client do
       end
 
       it "returns it's metadata using 'multipart' method" do
+        params = { :uploadType => "multipart", :parameters => { :convert => true }, :body_object => { :title => "example2.txt", :description => "something" } }
 
         request_body = <<-eos
           --simple_google_drive_boundary
           Content-Type: application/json; charset=UTF-8
 
-          {
-            "title": "A new title",
-            "description": "something"
-          }
+          #{params[:body_object].to_json}
 
           --simple_google_drive_boundary
           Content-Type: text/plain
@@ -106,15 +104,13 @@ describe SimpleGoogleDrive::Client do
           --simple_google_drive_boundary--
         eos
 
-        response_body = '{"kind": "drive#files", "title": "example.txt"}'
-
+        response_body = '{"kind": "drive#files", "title": "example2.txt", "description": "something"}'
 
         stub_request(:post, "#{SimpleGoogleDrive::API_UPLOAD_URL}/files")
-        .with(:query => {}, :body => /.+/, :headers => headers.merge({'Content-Type' => 'multipart/related; boundary=simple_google_drive_boundary'}))
+        .with(:query => {:convert => 'true'}, :body => request_body, :headers => headers.merge({'Content-Type' => 'multipart/related;boundary=simple_google_drive_boundary'}))
         .to_return(:status => 200, :body => response_body)
 
-        params = { :uploadType => "multipart", :params => { :convert => true }, :body_object => { :title => "A new title", :description => "something" } }
-        expect(client.files_upload(file_obj, params)).to eq(JSON.parse(response_body))
+        expect(client.files_upload(File.open(file_path), params)).to eq(JSON.parse(response_body))
 
       end
 
