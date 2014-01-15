@@ -39,23 +39,110 @@ https://developers.google.com/drive/v2/reference/
 
 ### About
 
+```ruby
     client.about
+    # => {"kind": "drive#about", ... }
+```
 
-### Files
+### Files methods  
+
+* **FILES_GET** (https://developers.google.com/drive/v2/reference/files/get)
 
 ```ruby
- client.files_get(file_id, parameters)
- client.files_insert(body, parameters)
- client.files_upload(file_obj, params)
- client.files_patch(file_id, body, params)
- client.files_copy(file_id, body, params)
- client.files_delete(file_id)
- client.files_list(params)
- client.files_touch(file_id)
- client.files_trash(file_id)
- client.files_untrash(file_id)
- client.files_watch(file_id, body)
+ optional_params = {:updateViewedDate => true}
+ client.files_get(file_id, optional_params)
 ```
+
+* **FILES_INSERT** (https://developers.google.com/drive/v2/reference/files/insert)
+
+This method is only for metadata-only requests not to upload files.
+
+```ruby
+ body = {:title => "A thesis about how awesome I am", :description => "No need!", }
+ optional_params = { :convert => true, :ocr => true }
+ client.files_insert(body, optional_params)
+```
+
+* **FILES_UPLOAD** (https://developers.google.com/drive/manage-uploads)
+
+Supporting only: **simple** and **multipart** uploads for now.
+
+**Simple Upload Example**
+
+```ruby
+ file_object = File.open("/tmp/awesome.pdf")
+ args = {:uploadType => 'media'}
+ client.files_upload(file_object, args)
+```
+
+**Multipart Upload Example**
+
+```ruby
+ file_object = File.open("/tmp/awesome.pdf")
+ args = {:uploadType => 'multipart', :body_object => {:title => "A thesis about how awesome I am", :description => "Ok! It needs!" }}
+ client.files_upload(file_object, args)
+```
+
+* **FILES_PATCH** (https://developers.google.com/drive/v2/reference/files/patch)
+
+```ruby
+ body = {:title => "A thesis about how awesome I am", :description => "Ok! It needs!" }
+ optional_params = { :convert => true, :ocr => true }
+ client.files_patch(file_id, body, optional_params)
+```
+
+* **FILES_COPY** (https://developers.google.com/drive/v2/reference/files/copy)
+
+```ruby
+ body = {:title => "A thesis about how awesome I am (copy)", :description => "Ok! It needs!" }
+ optional_params = { :convert => true, :ocr => true }
+ client.files_copy(file_id, body, optional_params)
+```
+
+* **FILES_DELETE** (https://developers.google.com/drive/v2/reference/files/delete)
+
+```ruby 
+ client.files_delete(file_id)
+```
+
+* **FILES_LIST** (https://developers.google.com/drive/v2/reference/files/list)
+
+The most important part of this method is the search parameters and you can find more at https://developers.google.com/drive/search-parameters
+
+```ruby
+ optional_params = {:maxResults => 10, :q => "title = 'awesome'"}
+ client.files_list(optional_params)
+```
+
+* **FILES_TOUCH** (https://developers.google.com/drive/v2/reference/files/touch)
+
+```ruby
+ client.files_touch(file_id)
+```
+
+* **FILES_TRASH** (https://developers.google.com/drive/v2/reference/files/trash)
+
+```ruby
+ client.files_trash(file_id)
+```
+
+* **FILES_UNTRASH** (https://developers.google.com/drive/v2/reference/files/untrash)
+
+```ruby
+ client.files_untrash(file_id)
+```
+
+* **FILES_WATCH** (https://developers.google.com/drive/v2/reference/files/watch)
+
+```ruby
+ client.files_watch(file_id)
+```
+
+## Todo's
+
+* Implement authenticantion flow
+* Implementing more methods
+* Improve test suite
 
 ## Contributing
 
