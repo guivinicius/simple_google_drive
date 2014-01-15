@@ -25,9 +25,11 @@ Or install it yourself as:
 
 You need to create a new object and then call its methods. Simple like that.
 
-    oauth2_access_token = "YOUR ACCESS TOKEN"
-    client = SimpleGoogleDrive.new(oauth2_access_token)
-    client.about
+```ruby
+ oauth2_access_token = "YOUR ACCESS TOKEN"
+ client = SimpleGoogleDrive.new(oauth2_access_token)
+ client.about
+```
 
 ## Methods
 
@@ -41,17 +43,19 @@ https://developers.google.com/drive/v2/reference/
 
 ### Files
 
-    client.files_get(file_id, parameters)
-    client.files_insert(body, parameters)
-    client.files_upload(file_obj, params)
-    client.files_patch(file_id, body, params)
-    client.files_copy(file_id, body, params)
-    client.files_delete(file_id)
-    client.files_list(params)
-    client.files_touch(file_id)
-    client.files_trash(file_id)
-    client.files_untrash(file_id)
-    client.files_watch(file_id, body)
+```ruby
+ client.files_get(file_id, parameters)
+ client.files_insert(body, parameters)
+ client.files_upload(file_obj, params)
+ client.files_patch(file_id, body, params)
+ client.files_copy(file_id, body, params)
+ client.files_delete(file_id)
+ client.files_list(params)
+ client.files_touch(file_id)
+ client.files_trash(file_id)
+ client.files_untrash(file_id)
+ client.files_watch(file_id, body)
+```
 
 ## Contributing
 
