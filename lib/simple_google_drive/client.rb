@@ -34,7 +34,7 @@ module SimpleGoogleDrive
       parse_response(response)
     end
 
-    def files_upload(file_obj, params = nil)
+    def files_upload(file_obj, params = {})
       raise ArgumentError, "Invalid upload type. Choose between media, multipart or resumable." if params[:uploadType].nil?
 
       url = build_url("/files", params, true)

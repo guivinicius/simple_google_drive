@@ -38,7 +38,9 @@ module SimpleGoogleDrive
                 raise ArgumentError, "Don't know how to handle 'body' (responds to 'read' but not to 'length' or 'stat.size')."
             end
             req.body_stream = body
-            req.content_type = 'multipart/form-data'
+
+            # Need to figure out the MIME type
+            req.content_type = 'text/plain'
         else
             s = body.to_s
             req["Content-Length"] = s.length
@@ -52,7 +54,7 @@ module SimpleGoogleDrive
       begin
         response = http.request(req)
       rescue Exception => e
-        # raise e
+        raise "Something wrong with the http response: #{e}"
       end
 
     end
@@ -60,21 +62,14 @@ module SimpleGoogleDrive
     def parse_response(response)
 
       if response.kind_of?(Net::HTTPServerError)
-          raise DropboxError.new("Dropbox Server Error: #{response} - #{response.body}", response)
+          raise "Google Drive Server Error: #{response} - #{response.body}"
       elsif response.kind_of?(Net::HTTPUnauthorized)
-          raise DropboxAuthError.new("User is not authenticated.", response)
+          raise "User is not authenticated."
       elsif not response.kind_of?(Net::HTTPSuccess)
           begin
               d = JSON.parse(response.body)
           rescue
-              raise "Dropbox Server Error: body=#{response.body}", response
-          end
-          if d['user_error'] and d['error']
-              raise DropboxError.new(d['error'], response, d['user_error'])  #user_error is translated
-          elsif d['error']
-              raise DropboxError.new(d['error'], response)
-          else
-              raise DropboxError.new(response.body, response)
+              raise "Server Error: response=#{response}"
           end
       end
 
