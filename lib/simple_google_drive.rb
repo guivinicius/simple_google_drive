@@ -1,6 +1,7 @@
 require 'uri'
 require 'net/http'
 require 'json'
+require 'mime/types'
 
 require 'simple_google_drive/version'
 require 'simple_google_drive/session_base'
