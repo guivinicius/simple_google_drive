@@ -14,7 +14,7 @@ module SimpleGoogleDrive
     def build_request(url, method = 'get', body = nil, content_type = nil)
 
       default_headers = {'User-Agent' => "Ruby/SimpleGoogleDrive/#{SimpleGoogleDrive::VERSION}", 'Authorization' => "Bearer #{@access_token}"}
-
+      content_type ||= 'application/json'
       case method
         when 'get'
           req = Net::HTTP::Get.new(url, default_headers)
