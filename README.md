@@ -151,3 +151,7 @@ The most important part of this method is the search parameters and you can find
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/guivinicius/simple_google_drive/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
